@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Download Center</title>
+  <link href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/lucide@latest" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f5f5f5;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .game-card {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+    .game-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+    .game-thumbnail {
+      width: 100%;
+      height: 160px;
+      background-color: #e0e0e0;
+      border-bottom: 1px solid #ddd;
+    }
+    .game-info {
+      padding: 1rem;
+    }
+    .game-title {
+      font-size: 1.2rem;
+      margin: 0 0 0.5rem 0;
+      color: #333;
+    }
+    .game-description {
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .game-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+    }
+    .game-genre {
+      background-color: #e3f2fd;
+      color: #1976d2;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+    }
+    .game-size {
+      color: #666;
+    }
+    .game-detail {
+      background: white;
+      border-radius: 8px;
+      padding: 2rem;
+      margin-top: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      cursor: pointer;
+      color: #1976d2;
+    }
+    .screenshots {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .screenshot {
+      height: 120px;
+      background-color: #e0e0e0;
+      border-radius: 4px;
+    }
+    .download-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 1rem;
+      font-size: 1.1rem;
+    }
+    .rating {
+      color: #ff9800;
+    }
+    @media (max-width: 768px) {
+      .game-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Game Download Center</h1>
+    
+    <div id="game-list">
+      <div class="game-grid" id="games-container">
+        <!-- Games will be inserted here by JavaScript -->
+      </div>
+    </div>
+    
+    <div id="game-detail" style="display: none;">
+      <div class="back-button" id="back-button">
+        <i data-lucide="arrow-left"></i>
+        Back to games
+      </div>
+      <div class="game-detail">
+        <h2 id="detail-title">Game Title</h2>
+        <div class="game-meta">
+          <span class="game-genre" id="detail-genre">Genre</span>
+          <span class="rating" id="detail-rating">★★★★☆</span>
+          <span class="game-size" id="detail-size">1.2 GB</span>
+        </div>
+        <p id="detail-description">Game description goes here...</p>
+        
+        <h3>Screenshots</h3>
+        <div class="screenshots" id="screenshots">
+          <!-- Screenshots will be inserted here -->
+        </div>
+        
+        <h3>System Requirements</h3>
+        <p id="detail-requirements">Requirements will be shown here</p>
+        
+        <button class="download-btn" id="download-btn">
+          <i data-lucide="download"></i>
+          Download Now
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    // Game data
+    const games = [
+      {
+        id: 1,
+        title: 'Space Adventure',
+        description: 'Explore distant galaxies in this epic space exploration game with stunning visuals and immersive gameplay. Discover new planets, engage in space battles, and build your own interstellar empire.',
+        genre: 'Adventure',
+        size: '2.4 GB',
+        rating: 4.5,
+        requirements: 'Windows 10, 8GB RAM, GTX 1060, 10GB storage',
+        screenshots: 3
+      },
+      {
+        id: 2,
+        title: 'Racing Legends',
+        description: 'Compete against the best in high-speed races across realistic tracks with customizable cars. Experience realistic physics and stunning graphics as you climb the ranks to become a racing legend.',
+        genre: 'Racing',
+        size: '3.1 GB',
+        rating: 4.2,
+        requirements: 'Windows 10, 16GB RAM, RTX 2060, 15GB storage',
+        screenshots: 3
+      },
+      {
+        id: 3,
+        title: 'Puzzle Master',
+        description: 'Challenge your brain with hundreds of mind-bending puzzles in beautiful environments. Solve increasingly difficult puzzles that will test your logic and problem-solving skills.',
+        genre: 'Puzzle',
+        size: '1.2 GB',
+        rating: 4.7,
+        requirements: 'Windows 8+, 4GB RAM, Integrated GPU, 5GB storage',
+        screenshots: 3
+      },
+      {
+        id: 4,
+        title: 'Zombie Survival',
+        description: 'Fight hordes of zombies in this intense survival horror game with crafting and base building. Scavenge for resources, fortify your shelter, and survive the zombie apocalypse.',
+        genre: 'Horror',
+        size: '5.3 GB',
+        rating: 4.3,
+        requirements: 'Windows 10, 16GB RAM, RTX 2070, 20GB storage',
+        screenshots: 3
+      }
+    ];
+
+    // DOM elements
+    const gamesContainer = document.getElementById('games-container');
+    const gameList = document.getElementById('game-list');
+    const gameDetail = document.getElementById('game-detail');
+    const backButton = document.getElementById('back-button');
+    const downloadBtn = document.getElementById('download-btn');
+
+    // Render game cards
+    function renderGames() {
+      gamesContainer.innerHTML = '';
+      games.forEach(game => {
+        const gameCard = document.createElement('div');
+        gameCard.className = 'game-card';
+        gameCard.innerHTML = `
+          <div class="game-thumbnail"></div>
+          <div class="game-info">
+            <h3 class="game-title">${game.title}</h3>
+            <p class="game-description">${game.description}</p>
+            <div class="game-meta">
+              <span class="game-genre">${game.genre}</span>
+              <span class="game-size">${game.size}</span>
+            </div>
+          </div>
+        `;
+        gameCard.addEventListener('click', () => showGameDetail(game));
+        gamesContainer.appendChild(gameCard);
+      });
+    }
+
+    // Show game details
+    function showGameDetail(game) {
+      gameList.style.display = 'none';
+      gameDetail.style.display = 'block';
+      
+      document.getElementById('detail-title').textContent = game.title;
+      document.getElementById('detail-genre').textContent = game.genre;
+      document.getElementById('detail-rating').textContent = '★'.repeat(Math.floor(game.rating)) + '☆'.repeat(5 - Math.floor(game.rating));
+      document.getElementById('detail-size').textContent = game.size;
+      document.getElementById('detail-description').textContent = game.description;
+      document.getElementById('detail-requirements').textContent = game.requirements;
+      
+      // Render screenshots
+      const screenshotsContainer = document.getElementById('screenshots');
+      screenshotsContainer.innerHTML = '';
+      for (let i = 0; i < game.screenshots; i++) {
+        const screenshot = document.createElement('div');
+        screenshot.className = 'screenshot';
+        screenshotsContainer.appendChild(screenshot);
+      }
+      
+      // Set up download button
+      downloadBtn.onclick = function() {
+        downloadGame(game);
+      };
+    }
+
+    // Download game function
+    function downloadGame(game) {
+      downloadBtn.innerHTML = '<i data-lucide="loader-2" class="animate-spin"></i> Downloading...';
+      downloadBtn.disabled = true;
+      
+      // Simulate download
+      setTimeout(() => {
+        alert(`${game.title} download started!`);
+        downloadBtn.innerHTML = '<i data-lucide="download"></i> Download Now';
+        downloadBtn.disabled = false;
+      }, 2000);
+    }
+
+    // Back to list
+    backButton.addEventListener('click', () => {
+      gameList.style.display = 'block';
+      gameDetail.style.display = 'none';
+    });
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      renderGames();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
